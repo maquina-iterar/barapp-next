@@ -1,16 +1,24 @@
-import ListadoBares from "components/bares/ListadoBares";
+import Usuario from "components/usuario/Usuario";
 import Head from "next/head";
 import auth0 from "./api/utils/auth0";
+import Router from "next/router";
+import { useEffect } from "react";
 
-export default function Home({ user }) {
+export default function Account({ user }) {
+  useEffect(() => {
+    if (!user) {
+      Router.replace("/");
+    }
+  }, [user]);
+
   return (
     <>
       <Head>
-        <title>Drinx</title>
+        <title>Drinx - Mi Cuenta</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <ListadoBares user={user} />
+      <Usuario user={user} />
     </>
   );
 }

@@ -1,8 +1,12 @@
-import ListadoBares from "components/bares/ListadoBares";
+import DetalleBar from "components/bares/DetalleBar";
 import Head from "next/head";
-import auth0 from "./api/utils/auth0";
+import { useRouter } from "next/router";
+import auth0 from "pages/api/utils/auth0";
 
-export default function Home({ user }) {
+export default function Bar({ user }) {
+  const router = useRouter();
+  const { slug } = router.query;
+
   return (
     <>
       <Head>
@@ -10,7 +14,7 @@ export default function Home({ user }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <ListadoBares user={user} />
+      <DetalleBar user={user} slug={slug} />
     </>
   );
 }
