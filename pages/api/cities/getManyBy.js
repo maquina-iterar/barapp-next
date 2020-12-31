@@ -24,8 +24,10 @@ const getManyBy = async (req, res) => {
     //   loc: { type: 'Point', coordinates: [Array] } //[long,lat]
     // }
 
+    const regex = new RegExp(search, "i");
+
     const result = cities.filter((city) =>
-      `${city.name}, ${city.country}`.match(search)
+      regex.test(`${city.name}, ${city.country}`)
     );
 
     res.status(200).json(result.slice(0, 100));
