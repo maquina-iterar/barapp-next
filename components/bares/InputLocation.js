@@ -24,8 +24,6 @@ const InputLocation = ({ onChange }) => {
       );
       const cities = await response.json();
 
-      console.log("cities", cities);
-
       /*
         {
             "cityId":3039154,

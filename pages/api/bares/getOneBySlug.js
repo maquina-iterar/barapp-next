@@ -1,8 +1,14 @@
+import auth0 from "../utils/auth0";
+
 const db = require("monk")(process.env.MONGO_DB);
 
 const getOneBySlug = async (req, res) => {
   try {
-    const { slug, userId } = req.query;
+    const session = await auth0.getSession(req);
+
+    const userId = session?.user?.sub ?? undefined;
+
+    const { slug } = req.query;
 
     const bares = await db.get("bares");
 

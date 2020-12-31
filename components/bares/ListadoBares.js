@@ -15,16 +15,12 @@ const ListadoBares = ({ user }) => {
     ["bares", location],
     ({ pageParam = 0 }) => getBares(location, pageParam),
     {
-      enabled: location && location.length === 2,
+      enabled: !!location && location.length === 2,
       getNextPageParam: (lastPage, allPages) => {
-        console.log("getNextPageParam", lastPage, allPages);
-
         const morePagesExist = lastPage?.length === ROW_PER_PAGE;
 
         let result = allPages.length;
         if (!morePagesExist) result = false;
-
-        console.log("result", result);
 
         return result;
       },
@@ -34,8 +30,6 @@ const ListadoBares = ({ user }) => {
   const bares = data && data.pages ? data.pages.flatMap((bares) => bares) : [];
 
   const isLoading = status === "loading" || bares.length === 0;
-
-  console.log("data", hasNextPage, location, data, isLoading);
 
   return (
     <Layout addLogo user={user}>
@@ -122,8 +116,6 @@ const getBares = async ([latitude, longitude], page = 0) => {
   const skip = page * ROW_PER_PAGE;
 
   const apiUrl = `${window.location.origin}/api/bares/getManyByLocation?latitude=${latitude}&longitude=${longitude}&skip=${skip}`;
-
-  console.log("apiUrl", apiUrl);
 
   const { data } = await axios.get(apiUrl);
 

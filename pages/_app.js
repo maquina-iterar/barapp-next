@@ -20,6 +20,7 @@ function MyApp({ Component, pageProps }) {
     <>
       <Head>
         <title>Drinx</title>
+        <meta name="description" content="Drinx la app de bares del futuro" />
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"

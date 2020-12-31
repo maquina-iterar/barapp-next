@@ -27,14 +27,15 @@ const LoginButton = ({ user }) => {
     <>
       {!user && (
         <div className={classes.user}>
-          <IconButton
-            disabled={!user}
-            color="inherit"
-            onClick={() => loginWithRedirect()}
-            className={classes.user}
-          >
-            <User />
-          </IconButton>
+          <Link href={"/api/login"} passHref>
+            <IconButton
+              color="inherit"
+              component={"a"}
+              className={classes.user}
+            >
+              <User />
+            </IconButton>
+          </Link>
         </div>
       )}
       {user && (

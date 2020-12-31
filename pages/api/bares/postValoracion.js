@@ -1,7 +1,11 @@
+import auth0 from "../utils/auth0";
+
 const db = require("monk")(process.env.MONGO_DB);
 
-const postValoracion = async (req, res) => {
+const postValoracion = auth0.requireAuthentication(async (req, res) => {
   try {
+    const { user } = await auth0.getSession(req);
+
     const { barId, valoracion } = req.body;
 
     const valoracionesPermitidas = ["megusta", "nomegusta"];
@@ -25,8 +29,12 @@ const postValoracion = async (req, res) => {
     await valoraciones.insert({
       barId: barId,
       valor: valoracion.toLowerCase(),
-      userId: request.user.sub,
-      userInfo: request.user["https://info.barapp.com/"],
+      userId: user.sub,
+      userInfo: {
+        email: user.email,
+        picture: user.picture ? user.picture : null,
+        nickname: user.nickname,
+      },
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       deletedAt: null,
@@ -41,6 +49,6 @@ const postValoracion = async (req, res) => {
   } finally {
     db.close();
   }
-};
+});
 
 export default postValoracion;

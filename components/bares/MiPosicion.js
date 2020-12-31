@@ -43,13 +43,11 @@ const MiPosicion = ({ value, onLocationEnable, onChange }) => {
 
   const [editing, setEditing] = useState(false);
 
-  console.log("value", value);
-
   const { data: city } = useQuery(
     ["myLocation", value],
     () => getMyLocation(value),
     {
-      enabled: value && value.length === 2,
+      enabled: !!value && value.length === 2,
     }
   );
 
@@ -173,8 +171,6 @@ const getMyLocation = async ([latitude, longitude]) => {
   const apiUrl = `${window.location.origin}/api/cities/getOneByLocation?latitude=${latitude}&longitude=${longitude}`;
 
   const { data } = await axios.get(apiUrl);
-
-  console.log("getMyLocation", apiUrl, data);
 
   return data;
 };
