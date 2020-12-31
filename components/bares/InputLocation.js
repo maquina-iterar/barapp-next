@@ -7,55 +7,50 @@ const InputLocation = ({ onChange }) => {
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState([]);
   const [search, setSearch] = useState("");
-  const loading = open; // && options.length === 0;
+  const [loading, setLoading] = useState(false);
 
   const inputRef = useRef(null);
 
   useEffect(() => {
-    let active = true;
-
-    if (!loading) {
+    if (!open || loading) {
       return undefined;
     }
 
     const action = async () => {
+      setLoading(true);
+
       const response = await fetch(
         `${window.location.origin}/api/cities/getManyBy?search=${search}`
       );
       const cities = await response.json();
 
       /*
-        {
-            "cityId":3039154,
-            "name":"El Tarter",
-            "altName":"",
-            "country":"AD",
-            "featureCode":"PPL",
-            "adminCode":"02",
-            "population":1052,
-            "loc":
-                {
-                    "type":"Point",
-                    "coordinates":[1.65362,42.57952]
-                }
-            }
-        */
-      if (active) {
-        setOptions(
-          cities.map(({ name, country, loc }) => ({
-            name: `${name}, ${country}`,
-            location: loc,
-          }))
-        );
-      }
+      {
+          "cityId":3039154,
+          "name":"El Tarter",
+          "altName":"",
+          "country":"AD",
+          "featureCode":"PPL",
+          "adminCode":"02",
+          "population":1052,
+          "loc":
+              {
+                  "type":"Point",
+                  "coordinates":[1.65362,42.57952]
+              }
+          }
+      */
+      setOptions(
+        cities.map(({ name, country, loc }) => ({
+          name: `${name}, ${country}`,
+          location: loc,
+        }))
+      );
+      setLoading(false);
     };
 
     action();
-
-    return () => {
-      active = false;
-    };
-  }, [loading, search]);
+  }, [open, search, setLoading]);
 
   useEffect(() => {
     if (!open) {
