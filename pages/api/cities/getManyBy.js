@@ -28,8 +28,6 @@ const getManyBy = async (req, res) => {
       `${city.name}, ${city.country}`.match(search)
     );
 
-    console.log("result", result);
-
     res.status(200).json(result.slice(0, 100));
   } catch (error) {
     console.error(error);
