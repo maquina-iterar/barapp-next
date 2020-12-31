@@ -28,6 +28,11 @@ import EmptyImage from "assets/ilustraciones/EmptyImage";
 import "react-image-lightbox/style.css";
 
 const useStyles = makeStyles((theme) => ({
+  "@global": {
+    ".ril__toolbar": {
+      backgroundColor: "transparent !important",
+    },
+  },
   root: {
     width: "100%",
     borderRadius: 8,
@@ -197,6 +202,7 @@ const DetalleBar = ({ slug, user }) => {
             prevSrc={
               galeria[(activeStep + galeria.length - 1) % galeria.length]
             }
+            reactModalStyle={{ overlay: { zIndex: 2000 } }}
             enableZoom={false}
             onCloseRequest={() => setGaleriaOpened(false)}
             onMovePrevRequest={handleBack}
