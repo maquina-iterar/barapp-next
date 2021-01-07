@@ -217,7 +217,6 @@ const DetalleBar = ({ slug, user, value }) => {
             }}
           >
             <CardMedia
-              component={"img"}
               className={classes.media}
               image={galeria && galeria[activeStep]}
               title={nombre}

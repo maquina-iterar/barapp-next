@@ -1,6 +1,6 @@
 import React from "react";
 import Document, { Html, Head, Main, NextScript } from "next/document";
-import { ServerStyleSheets } from "@material-ui/core/styles";
+//import { ServerStyleSheets } from "@material-ui/core/styles";
 
 export default class MyDocument extends Document {
   render() {
@@ -84,38 +84,38 @@ export default class MyDocument extends Document {
             name="msapplication-TileImage"
             content="/icons/ms-icon-144x144.png"
           />
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
-          />
         </Head>
         <body>
           <Main />
           <NextScript />
         </body>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
+        />
       </Html>
     );
   }
 }
 
-export async function getStaticProps(context) {
-  const sheets = new ServerStyleSheets();
-  const originalRenderPage = ctx.renderPage;
+// export async function getStaticProps(context) {
+//   const sheets = new ServerStyleSheets();
+//   const originalRenderPage = ctx.renderPage;
 
-  context.renderPage = () =>
-    originalRenderPage({
-      enhanceApp: (App) => (props) => sheets.collect(<App {...props} />),
-    });
+//   context.renderPage = () =>
+//     originalRenderPage({
+//       enhanceApp: (App) => (props) => sheets.collect(<App {...props} />),
+//     });
 
-  const initialProps = await Document.getInitialProps(ctx);
+//   const initialProps = await Document.getInitialProps(ctx);
 
-  return {
-    props: {
-      ...initialProps,
-      styles: [
-        ...React.Children.toArray(initialProps.styles),
-        sheets.getStyleElement(),
-      ],
-    },
-  };
-}
+//   return {
+//     props: {
+//       ...initialProps,
+//       styles: [
+//         ...React.Children.toArray(initialProps.styles),
+//         sheets.getStyleElement(),
+//       ],
+//     },
+//   };
+// }
