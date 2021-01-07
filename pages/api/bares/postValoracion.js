@@ -1,4 +1,4 @@
-import auth0 from "../utils/auth0";
+import auth0 from "../../../libs/initAuth0";
 
 const db = require("monk")(process.env.MONGO_DB);
 

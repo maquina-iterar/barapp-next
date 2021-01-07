@@ -110,10 +110,8 @@ const caracteristicasLabels = {
 const STARS_NUMBER = 5;
 const queryBarDetails = "bar";
 
-const DetalleBar = ({ slug, user }) => {
+const DetalleBar = ({ slug, user, value }) => {
   const classes = useStyles();
-
-  const accessToken = "";
 
   const userId = user ? user.sub : "";
 
@@ -121,7 +119,8 @@ const DetalleBar = ({ slug, user }) => {
     [queryBarDetails, slug, userId],
     () => getBar(slug, userId),
     {
-      enabled: !!slug && !!(userId || userId === ""),
+      enabled: !value && !!slug && !!(userId || userId === ""),
+      initialData: value,
     }
   );
 
@@ -294,7 +293,6 @@ const DetalleBar = ({ slug, user }) => {
                     mutateValoracion({
                       barId: _id,
                       valoracion: "megusta",
-                      accessToken,
                     })
                   }
                   user={user}
@@ -310,7 +308,6 @@ const DetalleBar = ({ slug, user }) => {
                     mutateValoracion({
                       barId: _id,
                       valoracion: "nomegusta",
-                      accessToken,
                     })
                   }
                   color={miValoracion === "nomegusta" ? "primary" : "secondary"}
@@ -477,6 +474,8 @@ const formatRedSocial = ({ redSocial, link }) => {
 };
 
 const getBar = async (slug, userId) => {
+  console.log("getBar");
+
   const apiUrl = `${window.location.origin}/api/bares/getOneBySlug?slug=${slug}&userId=${userId}`;
 
   const { data } = await axios.get(apiUrl);
@@ -484,12 +483,8 @@ const getBar = async (slug, userId) => {
   return data;
 };
 
-const postValoracion = async ({ barId, valoracion, accessToken }) => {
+const postValoracion = async ({ barId, valoracion }) => {
   const apiUrl = `${window.location.origin}/api/bares/postValoracion`;
 
-  const body = { barId, valoracion };
-
-  return await axios.post(apiUrl, body, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+  return await axios.post(apiUrl, { barId, valoracion });
 };

@@ -1,4 +1,4 @@
-import auth0 from "./utils/auth0";
+import auth0 from "../../libs/initAuth0";
 
 const login = async (req, res) => {
   try {

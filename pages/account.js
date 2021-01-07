@@ -1,6 +1,6 @@
 import Usuario from "components/usuario/Usuario";
 import Head from "next/head";
-import auth0 from "./api/utils/auth0";
+import auth0 from "../libs/initAuth0";
 import Router from "next/router";
 import { useEffect } from "react";
 
@@ -25,9 +25,11 @@ export default function Account({ user }) {
 
 export async function getServerSideProps(context) {
   const session = await auth0.getSession(context.req);
+  const user = session?.user ?? null;
+
   return {
     props: {
-      user: session?.user ?? null,
+      user,
     },
   };
 }
