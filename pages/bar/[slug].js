@@ -1,8 +1,10 @@
-import DetalleBar from "components/bares/DetalleBar";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import auth0 from "libs/initAuth0";
 import { getBarBySlug } from "pages/api/bares/getOneBySlug";
+
+const DetalleBar = dynamic(import("components/bares/DetalleBar"));
 
 export default function Bar({ user, bar }) {
   const router = useRouter();
