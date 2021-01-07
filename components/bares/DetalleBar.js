@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -25,6 +25,8 @@ import PinOutline from "assets/icons/PinOutline";
 import Instagram from "assets/icons/Instagram";
 import Website from "assets/icons/Website";
 import EmptyImage from "assets/ilustraciones/EmptyImage";
+import Image from "next/image";
+
 import "react-image-lightbox/style.css";
 
 const useStyles = makeStyles((theme) => ({
@@ -172,13 +174,7 @@ const DetalleBar = ({ slug, user, value }) => {
 
   const descriptionLines = descripcion ? descripcion.split("\n") : [];
 
-  const [coverImage, setCoverImage] = useState(undefined);
-
-  useEffect(() => {
-    if (galeria && galeria[activeStep]) {
-      setCoverImage(galeria[activeStep]);
-    }
-  }, [galeria, activeStep]);
+  const coverImage = galeria && galeria[activeStep];
 
   return (
     <Layout backUrl="/" user={user}>
@@ -229,10 +225,11 @@ const DetalleBar = ({ slug, user, value }) => {
                 <EmptyImage style={{ height: "100%", width: "100%" }} />
               )}
               {coverImage && (
-                <img
-                  alt={nombre}
+                <Image
                   src={coverImage}
-                  style={{ height: "100%", width: "100%" }}
+                  alt={nombre}
+                  layout={"fill"}
+                  objectFit={"cover"}
                 />
               )}
             </CardMedia>
