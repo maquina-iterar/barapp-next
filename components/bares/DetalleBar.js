@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -172,6 +172,14 @@ const DetalleBar = ({ slug, user, value }) => {
 
   const descriptionLines = descripcion ? descripcion.split("\n") : [];
 
+  const [coverImage, setCoverImage] = useState(undefined);
+
+  useEffect(() => {
+    if (galeria && galeria[activeStep]) {
+      setCoverImage(galeria[activeStep]);
+    }
+  }, [galeria, activeStep]);
+
   return (
     <Layout backUrl="/" user={user}>
       <div style={{ paddingBottom: 18 }}>
@@ -210,19 +218,22 @@ const DetalleBar = ({ slug, user, value }) => {
         )}
         <div style={{ position: "relative" }}>
           <CardActionArea
-            disabled={!(galeria && galeria[activeStep])}
+            disabled={!coverImage}
             onClick={(e) => {
               e.preventDefault();
               setGaleriaOpened(true);
             }}
           >
-            <CardMedia
-              className={classes.media}
-              image={galeria && galeria[activeStep]}
-              title={nombre}
-            >
-              {!(galeria && galeria[activeStep]) && (
+            <CardMedia className={classes.media} title={nombre}>
+              {!coverImage && (
                 <EmptyImage style={{ height: "100%", width: "100%" }} />
+              )}
+              {coverImage && (
+                <img
+                  alt={nombre}
+                  src={coverImage}
+                  style={{ height: "100%", width: "100%" }}
+                />
               )}
             </CardMedia>
           </CardActionArea>
