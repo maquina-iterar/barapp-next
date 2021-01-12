@@ -36,10 +36,7 @@ const useStyles = makeStyles({
 const MiPosicion = ({ value, onFindMe }) => {
   const classes = useStyles();
 
-  const [
-    locationPermission,
-    refreshLocationPermission,
-  ] = useLocationPermission();
+  const locationPermission = useLocationPermission(value);
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -54,7 +51,7 @@ const MiPosicion = ({ value, onFindMe }) => {
   return (
     <div className={classes.position}>
       <Typography variant={"h5"} className={classes.title}>
-        Por acá cerca&nbsp;
+        Bares cerca tuyo&nbsp;
       </Typography>
       <div style={{ display: "flex" }}>
         <Button
@@ -128,7 +125,6 @@ const MiPosicion = ({ value, onFindMe }) => {
               setOpen(false);
               if (onFindMe) {
                 onFindMe();
-                refreshLocationPermission();
               }
             }}
             variant={"contained"}

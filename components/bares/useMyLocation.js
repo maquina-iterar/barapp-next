@@ -41,26 +41,28 @@ export const permissionOptions = {
   denied: "denied",
 };
 
-export const useLocationPermission = () => {
+export const useLocationPermission = (currentLocation) => {
   const [state, setState] = useState(permissionOptions.loading);
 
-  const refreshPermission = async () => {
-    setState(permissionOptions.loading);
-
-    if (navigator.permissions) {
-      const { state } = await navigator.permissions.query({
-        name: "geolocation",
-      });
-
-      setState(state);
-    }
-  };
-
   useEffect(() => {
-    refreshPermission();
-  }, [setState]);
+    const refreshPermission = async () => {
+      if (state !== permissionOptions.granted) {
+        setState(permissionOptions.loading);
 
-  return [state, refreshPermission];
+        if (navigator.permissions) {
+          const { state: newState } = await navigator.permissions.query({
+            name: "geolocation",
+          });
+
+          setState(newState);
+        }
+      }
+    };
+
+    refreshPermission();
+  }, [setState, currentLocation]);
+
+  return state;
 };
 
 const getCurrentLocation = () => {
