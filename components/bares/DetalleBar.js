@@ -100,6 +100,15 @@ const useStyles = makeStyles((theme) => ({
     opacity: 0.3,
     marginBottom: 20,
   },
+  contactoButton: {
+    border: "2px solid #D69C00",
+    height: 46,
+    width: 46,
+  },
+  contactButtonLabel: {
+    height: 24,
+    width: 24,
+  },
 }));
 
 const caracteristicasLabels = {
@@ -416,42 +425,56 @@ const DetalleBar = ({ slug, user, value }) => {
 
           <div>
             <hr className={classes.lineaSeparadoraRedes} />
-            <IconButton
-              aria-label="Ubicación"
-              component={"a"}
-              href={ubicacionUrl}
-              target={"_blank"}
-              rel="noopener noreferrer"
-            >
-              <PinOutline />
-            </IconButton>
-            {contactos &&
-              contactos.map((contacto, index) => (
-                <React.Fragment key={`contacto-item-${index}`}>
-                  {contacto.redSocial === "instagram" && (
-                    <IconButton
-                      aria-label="Instagram"
-                      component={"a"}
-                      href={contacto.link}
-                      target={"_blank"}
-                      rel="noopener noreferrer"
-                    >
-                      <Instagram />
-                    </IconButton>
-                  )}
-                  {contacto.redSocial === "website" && (
-                    <IconButton
-                      aria-label="Web"
-                      component={"a"}
-                      href={contacto.link}
-                      target={"_blank"}
-                      rel="noopener noreferrer"
-                    >
-                      <Website />
-                    </IconButton>
-                  )}
-                </React.Fragment>
-              ))}
+            <div style={{ display: "flex", gap: 16 }}>
+              <IconButton
+                aria-label="Ubicación"
+                component={"a"}
+                href={ubicacionUrl}
+                target={"_blank"}
+                rel="noopener noreferrer"
+                classes={{
+                  root: classes.contactoButton,
+                  label: classes.contactButtonLabel,
+                }}
+              >
+                <PinOutline />
+              </IconButton>
+              {contactos &&
+                contactos.map((contacto, index) => (
+                  <React.Fragment key={`contacto-item-${index}`}>
+                    {contacto.redSocial === "instagram" && (
+                      <IconButton
+                        aria-label="Instagram"
+                        component={"a"}
+                        href={contacto.link}
+                        target={"_blank"}
+                        rel="noopener noreferrer"
+                        classes={{
+                          root: classes.contactoButton,
+                          label: classes.contactButtonLabel,
+                        }}
+                      >
+                        <Instagram />
+                      </IconButton>
+                    )}
+                    {contacto.redSocial === "website" && (
+                      <IconButton
+                        aria-label="Web"
+                        component={"a"}
+                        href={contacto.link}
+                        target={"_blank"}
+                        rel="noopener noreferrer"
+                        classes={{
+                          root: classes.contactoButton,
+                          label: classes.contactButtonLabel,
+                        }}
+                      >
+                        <Website />
+                      </IconButton>
+                    )}
+                  </React.Fragment>
+                ))}
+            </div>
           </div>
         </CardContent>
       </Card>
