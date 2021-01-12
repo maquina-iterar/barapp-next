@@ -47,7 +47,7 @@ const ListadoBares = ({ user }) => {
             fetchNextPage();
           }}
           hasMore={hasNextPage}
-          loader={<BarLoading />}
+          loader={null}
           style={{
             display: "flex",
             flexDirection: "column",
@@ -80,14 +80,15 @@ const ListadoBares = ({ user }) => {
         >
           {bares &&
             bares.map((bar) => <Bar key={`bar-${bar._id}`} value={bar} />)}
-        </InfiniteScroll>
 
-        {isLoading && (
-          <>
-            <BarLoading />
-            <BarLoading />
-          </>
-        )}
+          {isLoading && (
+            <>
+              <BarLoading />
+              <BarLoading />
+              <BarLoading />
+            </>
+          )}
+        </InfiniteScroll>
       </div>
     </Layout>
   );
