@@ -1,8 +1,10 @@
-import Usuario from "components/usuario/Usuario";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import auth0 from "../libs/initAuth0";
 import Router from "next/router";
 import { useEffect } from "react";
+
+const Usuario = dynamic(import("components/usuario/Usuario"));
 
 export default function Account({ user }) {
   useEffect(() => {

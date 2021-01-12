@@ -1,16 +1,35 @@
 import { useState, useEffect } from "react";
+import store from "store2";
+import axios from "axios";
 
 const useMyLocation = () => {
-  const [location, setLocation] = useState([]);
-  const [selected, setSelected] = useState(null);
+  const [location, setLocation] = useState(store("latestLocation") ?? []);
 
-  const getLocation = async () => {
+  const updateLocation = async () => {
     const current = await getCurrentLocation();
 
     setLocation(current);
+    store("latestLocation", current);
   };
 
-  return [selected ? selected : location, setSelected, getLocation];
+  useEffect(() => {
+    const action = async () => {
+      try {
+        if (location && location.length !== 2) {
+          const { data } = await axios.get("https://freegeoip.app/json/");
+
+          setLocation([data.latitude, data.longitude]);
+          store("latestLocation", [data.latitude, data.longitude]);
+        }
+      } catch (error) {
+        console.error("useMyLocation freegeoip", error);
+      }
+    };
+
+    action();
+  }, [location, setLocation]);
+
+  return [location, updateLocation];
 };
 
 export default useMyLocation;
@@ -25,21 +44,23 @@ export const permissionOptions = {
 export const useLocationPermission = () => {
   const [state, setState] = useState(permissionOptions.loading);
 
+  const refreshPermission = async () => {
+    setState(permissionOptions.loading);
+
+    if (navigator.permissions) {
+      const { state } = await navigator.permissions.query({
+        name: "geolocation",
+      });
+
+      setState(state);
+    }
+  };
+
   useEffect(() => {
-    const getPermission = async () => {
-      if (navigator.permissions) {
-        const { state } = await navigator.permissions.query({
-          name: "geolocation",
-        });
-
-        setState(state);
-      }
-    };
-
-    getPermission();
+    refreshPermission();
   }, [setState]);
 
-  return state;
+  return [state, refreshPermission];
 };
 
 const getCurrentLocation = () => {

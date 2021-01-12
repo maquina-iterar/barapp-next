@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Typography from "@material-ui/core/Typography";
-import Location from "assets/icons/Location";
+import LocationIcon from "@material-ui/icons/GpsFixed";
 import { makeStyles } from "@material-ui/core/styles";
-import axios from "axios";
-import { useQuery } from "react-query";
-import InputLocation from "./InputLocation";
-import Link from "@material-ui/core/Link";
 import {
   useLocationPermission,
   permissionOptions,
@@ -27,73 +23,55 @@ const useStyles = makeStyles({
     marginTop: 20,
     alignSelf: "flex-start",
     display: "flex",
-    alignItems: "center",
+    justifyContent: "center",
     width: "100%",
+    flexDirection: "column",
   },
   title: {
     fontWeight: 800,
     color: "#232326",
-    borderBottom: "2px solid #232326",
-    cursor: "pointer",
   },
 });
 
-const MiPosicion = ({ value, onLocationEnable, onChange }) => {
+const MiPosicion = ({ value, onFindMe }) => {
   const classes = useStyles();
 
-  const [editing, setEditing] = useState(false);
-
-  const { data: city } = useQuery(
-    ["myLocation", value],
-    () => getMyLocation(value),
-    {
-      enabled: !!value && value.length === 2,
-    }
-  );
-
-  const locationPermission = useLocationPermission();
+  const [
+    locationPermission,
+    refreshLocationPermission,
+  ] = useLocationPermission();
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    if (locationPermission === permissionOptions.prompt) {
-      setOpen(true);
-    }
-
-    if (
-      value.length === 0 &&
-      locationPermission === permissionOptions.granted &&
-      onLocationEnable
-    ) {
-      onLocationEnable();
-    }
-  }, [value, locationPermission, onLocationEnable]);
+  const findMeButtonEnabled = [
+    permissionOptions.prompt,
+    permissionOptions.granted,
+  ].includes(locationPermission);
 
   return (
     <div className={classes.position}>
-      <Location />
-      {!editing && (
-        <Link component="button" onClick={() => setEditing(true)}>
-          <Typography variant={"h5"} className={classes.title}>
-            {city
-              ? `${city.name}, ${city.country}`
-              : "Seleccioná una ubicación"}
-          </Typography>
-        </Link>
-      )}
-      {editing && (
-        <div style={{ width: "100%", paddingLeft: 5, paddingRight: 5 }}>
-          <InputLocation
-            onChange={(value) => {
-              setEditing(false);
-              if (onChange) onChange(value);
-            }}
-          />
-        </div>
-      )}
+      <Typography variant={"h5"} className={classes.title}>
+        Por acá cerca&nbsp;
+      </Typography>
+      <div style={{ display: "flex" }}>
+        <Button
+          disabled={!findMeButtonEnabled}
+          onClick={() => {
+            if (locationPermission === permissionOptions.prompt) {
+              setOpen(true);
+            }
+            if (locationPermission === permissionOptions.granted) {
+              if (onFindMe) onFindMe();
+            }
+          }}
+        >
+          <LocationIcon />
+          &nbsp; Utilizar mi ubicación actual
+        </Button>
+      </div>
       <Dialog
         fullScreen={fullScreen}
         open={open}
@@ -148,8 +126,9 @@ const MiPosicion = ({ value, onLocationEnable, onChange }) => {
           <Button
             onClick={() => {
               setOpen(false);
-              if (onLocationEnable) {
-                onLocationEnable();
+              if (onFindMe) {
+                onFindMe();
+                refreshLocationPermission();
               }
             }}
             variant={"contained"}
@@ -166,11 +145,3 @@ const MiPosicion = ({ value, onLocationEnable, onChange }) => {
 };
 
 export default MiPosicion;
-
-const getMyLocation = async ([latitude, longitude]) => {
-  const apiUrl = `${window.location.origin}/api/cities/getOneByLocation?latitude=${latitude}&longitude=${longitude}`;
-
-  const { data } = await axios.get(apiUrl);
-
-  return data;
-};

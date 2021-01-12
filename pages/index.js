@@ -1,6 +1,8 @@
-import ListadoBares from "components/bares/ListadoBares";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import auth0 from "../libs/initAuth0";
+
+const ListadoBares = dynamic(import("components/bares/ListadoBares"));
 
 export default function Home({ user }) {
   return (

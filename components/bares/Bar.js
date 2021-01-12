@@ -9,6 +9,7 @@ import Link from "next/link";
 import Rating from "@material-ui/lab/Rating";
 import { withStyles } from "@material-ui/core/styles";
 import EmptyImage from "assets/ilustraciones/EmptyImage";
+import Image from "next/image";
 
 const useStyles = makeStyles({
   root: {
@@ -18,6 +19,7 @@ const useStyles = makeStyles({
   },
   media: {
     height: 140,
+    position: "relative",
   },
 });
 
@@ -44,8 +46,18 @@ const Bar = ({ value }) => {
     <Card className={classes.root}>
       <Link href={`/bar/${slug}`} passHref>
         <CardActionArea component={"a"}>
-          <CardMedia className={classes.media} image={fotoUrl} title={nombre}>
-            {!fotoUrl && <EmptyImage style={{ height: 140, width: "100%" }} />}
+          <CardMedia className={classes.media} title={nombre}>
+            {!fotoUrl && (
+              <EmptyImage style={{ height: "100%", width: "100%" }} />
+            )}
+            {fotoUrl && (
+              <Image
+                src={fotoUrl}
+                alt={nombre}
+                layout={"fill"}
+                objectFit={"cover"}
+              />
+            )}
           </CardMedia>
           <CardContent style={{ paddingBottom: 24 }}>
             <div style={{ display: "flex" }}>

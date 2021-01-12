@@ -9,7 +9,7 @@ import useMyLocation from "./useMyLocation";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const ListadoBares = ({ user }) => {
-  const [location, setSelected, getLocation] = useMyLocation();
+  const [location, updateLocation] = useMyLocation();
 
   const { status, data, fetchNextPage, hasNextPage } = useInfiniteQuery(
     ["bares", location],
@@ -40,17 +40,7 @@ const ListadoBares = ({ user }) => {
           gap: 20,
         }}
       >
-        <MiPosicion
-          value={location}
-          onLocationEnable={() => getLocation()}
-          onChange={(value) => {
-            setSelected(
-              value && value.location && value.location.coordinates
-                ? value.location.coordinates.reverse()
-                : null
-            );
-          }}
-        />
+        <MiPosicion value={location} onFindMe={updateLocation} />
         <InfiniteScroll
           dataLength={bares ? bares.length : 0} //This is important field to render the next data
           next={() => {
