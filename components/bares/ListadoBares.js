@@ -86,7 +86,6 @@ const ListadoBares = ({ user }) => {
           <>
             <BarLoading />
             <BarLoading />
-            <BarLoading />
           </>
         )}
       </div>

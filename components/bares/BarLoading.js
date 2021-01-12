@@ -9,9 +9,12 @@ import Skeleton from "@material-ui/lab/Skeleton";
 const useStyles = makeStyles({
   root: {
     width: "100%",
+    borderRadius: 8,
+    boxShadow: "0px 5px 20px -5px rgba(0, 0, 0, 0.25)",
   },
   media: {
     height: 140,
+    position: "relative",
   },
 });
 
@@ -22,22 +25,31 @@ const BarLoading = () => {
     <Card className={classes.root}>
       <CardActionArea>
         <Skeleton animation="wave" variant="rect" className={classes.media} />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
-            <Skeleton
-              animation="wave"
-              height={10}
-              width="80%"
-              style={{ marginBottom: 6 }}
-            />
+        <CardContent style={{ paddingBottom: 24 }}>
+          <Typography
+            gutterBottom
+            variant="h5"
+            component="h2"
+            style={{
+              fontWeight: "bold",
+              color: "#434347",
+              display: "block",
+              flex: 1,
+            }}
+          >
+            <Skeleton animation="wave" height={32} width="80%" />
           </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            <Skeleton
-              animation="wave"
-              height={10}
-              width="80%"
-              style={{ marginBottom: 6 }}
-            />
+          <Typography
+            variant="body2"
+            component="p"
+            style={{
+              color: "#83848C",
+              textOverflow: "ellipsis",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+            }}
+          >
+            <Skeleton animation="wave" height={20} width="80%" />
           </Typography>
         </CardContent>
       </CardActionArea>
