@@ -41,5 +41,5 @@ export const getBarBySlug = async (slug, userId) => {
     miValoracion = valoracion ? valoracion.valor : null;
   }
 
-  return { ...result, _id: result._id.toString(), miValoracion };
+  return { ...result, _id: result?._id.toString(), miValoracion };
 };

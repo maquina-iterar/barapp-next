@@ -26,6 +26,7 @@ import Instagram from "assets/icons/Instagram";
 import Website from "assets/icons/Website";
 import EmptyImage from "assets/ilustraciones/EmptyImage";
 import Image from "next/image";
+import Link from "next/link";
 
 import "react-image-lightbox/style.css";
 
@@ -159,6 +160,7 @@ const DetalleBar = ({ slug, user, value }) => {
     caracteristicas,
     ubicacionUrl,
     miValoracion,
+    ubicacion,
     _id,
   } = bar;
 
@@ -474,6 +476,29 @@ const DetalleBar = ({ slug, user, value }) => {
                     )}
                   </React.Fragment>
                 ))}
+
+              <div
+                style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}
+              >
+                <Link
+                  href={`/?near=${nombre}&by=${ubicacion.coordinates}`}
+                  passHref
+                >
+                  <Button
+                    variant={"outlined"}
+                    style={{
+                      color: "#D69C00",
+                      borderWidth: 2,
+                      borderColor: "#D69C00",
+                      borderRadius: 32,
+                      fontWeight: 700,
+                    }}
+                    component={"a"}
+                  >
+                    ¿Qué hay cerca?
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </CardContent>

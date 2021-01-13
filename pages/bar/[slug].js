@@ -13,7 +13,7 @@ export default function Bar({ user, bar }) {
   return (
     <>
       <Head>
-        <title>Drinx</title>
+        <title>Drinx - {bar.nombre}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 

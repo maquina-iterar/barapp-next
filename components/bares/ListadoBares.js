@@ -7,15 +7,19 @@ import { useInfiniteQuery } from "react-query";
 import MiPosicion from "./MiPosicion";
 import useMyLocation from "./useMyLocation";
 import InfiniteScroll from "react-infinite-scroll-component";
+import NearByPosicion from "./NearByPosicion";
 
-const ListadoBares = ({ user }) => {
+const ListadoBares = ({ user, near, by }) => {
   const [location, updateLocation] = useMyLocation();
 
+  const isNearBy = near && by && by.includes(",");
+  const point = isNearBy ? by.split(",") : location;
+
   const { status, data, fetchNextPage, hasNextPage } = useInfiniteQuery(
-    ["bares", location],
-    ({ pageParam = 0 }) => getBares(location, pageParam),
+    ["bares", point],
+    ({ pageParam = 0 }) => getBares(point, pageParam),
     {
-      enabled: !!location && location.length === 2,
+      enabled: !!point && point.length === 2,
       getNextPageParam: (lastPage, allPages) => {
         const morePagesExist = lastPage?.length === ROW_PER_PAGE;
 
@@ -40,7 +44,8 @@ const ListadoBares = ({ user }) => {
           gap: 20,
         }}
       >
-        <MiPosicion value={location} onFindMe={updateLocation} />
+        {!isNearBy && <MiPosicion value={location} onFindMe={updateLocation} />}
+        {isNearBy && <NearByPosicion value={near} />}
         <InfiniteScroll
           dataLength={bares ? bares.length : 0} //This is important field to render the next data
           next={() => {

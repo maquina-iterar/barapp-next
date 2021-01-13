@@ -51,7 +51,7 @@ const MiPosicion = ({ value, onFindMe }) => {
   return (
     <div className={classes.position}>
       <Typography variant={"h5"} className={classes.title}>
-        Bares cerca tuyo&nbsp;
+        Bares cerca tuyo
       </Typography>
       <div style={{ display: "flex" }}>
         <Button

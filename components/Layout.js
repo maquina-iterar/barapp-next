@@ -61,7 +61,13 @@ const Layout = ({ children, backUrl, title, addLogo, user }) => {
             </Link>
           )}
           <div className={classes.title}>
-            {addLogo && <Logo />}
+            {addLogo && (
+              <Link href={"/"} passHref>
+                <a>
+                  <Logo />
+                </a>
+              </Link>
+            )}
             {title && <Typography variant="h6">{title}</Typography>}
           </div>
           <LoginButton user={user} />
