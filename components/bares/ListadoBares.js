@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import Bar from "./Bar";
 import BarLoading from "./BarLoading";
 import Layout from "../../components/Layout";
@@ -8,16 +8,24 @@ import MiPosicion from "./MiPosicion";
 import useMyLocation from "./useMyLocation";
 import InfiniteScroll from "react-infinite-scroll-component";
 import NearByPosicion from "./NearByPosicion";
+import SearchIcon from "@material-ui/icons/Search";
+import CancelIcon from "@material-ui/icons/Cancel";
+import IconButton from "@material-ui/core/IconButton";
+import TextField from "@material-ui/core/TextField";
 
 const ListadoBares = ({ user, near, by }) => {
+  const [searchVisible, setSearchVisible] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const refSetTimeout = useRef(null);
+
   const [location, updateLocation] = useMyLocation();
 
   const isNearBy = near && by && by.includes(",");
   const point = isNearBy ? by.split(",") : location;
 
   const { status, data, fetchNextPage, hasNextPage } = useInfiniteQuery(
-    ["bares", point],
-    ({ pageParam = 0 }) => getBares(point, pageParam),
+    ["bares", point, searchText],
+    ({ pageParam = 0 }) => getBares(point, searchText, pageParam),
     {
       enabled: !!point && point.length === 2,
       getNextPageParam: (lastPage, allPages) => {
@@ -44,8 +52,58 @@ const ListadoBares = ({ user, near, by }) => {
           gap: 20,
         }}
       >
-        {!isNearBy && <MiPosicion value={location} onFindMe={updateLocation} />}
-        {isNearBy && <NearByPosicion value={near} />}
+        <div
+          style={{
+            display: "flex",
+            gap: 20,
+            marginTop: 20,
+          }}
+        >
+          <div style={{ display: "flex", width: "70%", flex: 1 }}>
+            {!searchVisible && !isNearBy && (
+              <MiPosicion value={location} onFindMe={updateLocation} />
+            )}
+            {!searchVisible && isNearBy && <NearByPosicion value={near} />}
+            {searchVisible && (
+              <TextField
+                label="Buscar"
+                color="secondary"
+                fullWidth={true}
+                variant="outlined"
+                onChange={(event) => {
+                  const text = event.target.value;
+
+                  if (refSetTimeout.current)
+                    clearTimeout(refSetTimeout.current);
+
+                  refSetTimeout.current = setTimeout(
+                    () => setSearchText(text),
+                    500
+                  );
+                }}
+                autoFocus
+              />
+            )}
+          </div>
+          <div>
+            <IconButton
+              aria-label="search"
+              color="secondary"
+              onClick={() => {
+                const isVisible = !searchVisible;
+
+                setSearchVisible(isVisible);
+
+                if (!isVisible) {
+                  setSearchText("");
+                }
+              }}
+            >
+              {!searchVisible && <SearchIcon fontSize="large" />}
+              {searchVisible && <CancelIcon fontSize="large" />}
+            </IconButton>
+          </div>
+        </div>
         <InfiniteScroll
           dataLength={bares ? bares.length : 0} //This is important field to render the next data
           next={() => {
@@ -103,14 +161,14 @@ export default ListadoBares;
 
 const ROW_PER_PAGE = 10;
 
-const getBares = async ([latitude, longitude], page = 0) => {
+const getBares = async ([latitude, longitude], searchText, page = 0) => {
   if (!latitude || !latitude) {
     return { pages: [] };
   }
 
   const skip = page * ROW_PER_PAGE;
 
-  const apiUrl = `${window.location.origin}/api/bares/getManyByLocation?latitude=${latitude}&longitude=${longitude}&skip=${skip}`;
+  const apiUrl = `${window.location.origin}/api/bares/getManyByLocation?latitude=${latitude}&longitude=${longitude}&skip=${skip}&search=${searchText}`;
 
   const { data } = await axios.get(apiUrl);
 

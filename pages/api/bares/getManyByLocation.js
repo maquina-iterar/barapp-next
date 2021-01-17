@@ -2,7 +2,7 @@ const db = require("monk")(process.env.MONGO_DB);
 
 const getManyByLocation = async (req, res) => {
   try {
-    const { latitude, longitude, skip } = req.query;
+    const { latitude, longitude, search, skip } = req.query;
 
     if (!latitude || !longitude) {
       res.status(200).json([]);
@@ -12,8 +12,17 @@ const getManyByLocation = async (req, res) => {
     const skipNum = skip ? +skip : 0;
 
     const bares = await db.get("bares");
+
+    const filters =
+      search && search.length > 0
+        ? {
+            nombre: new RegExp(search, "gi"),
+          }
+        : {};
+
     const result = await bares.find(
       {
+        ...filters,
         ubicacion: {
           $near: {
             $geometry: { type: "Point", coordinates: [+latitude, +longitude] },

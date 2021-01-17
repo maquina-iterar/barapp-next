@@ -20,7 +20,6 @@ import LocationIlu from "assets/ilustraciones/Location";
 
 const useStyles = makeStyles({
   position: {
-    marginTop: 20,
     alignSelf: "flex-start",
     display: "flex",
     justifyContent: "center",
@@ -66,7 +65,7 @@ const MiPosicion = ({ value, onFindMe }) => {
           }}
         >
           <LocationIcon />
-          &nbsp; Utilizar mi ubicación actual
+          &nbsp; Usar mi ubicación actual
         </Button>
       </div>
       <Dialog

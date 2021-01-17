@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 
 const useStyles = makeStyles({
   position: {
-    marginTop: 20,
     alignSelf: "flex-start",
     display: "flex",
     justifyContent: "center",
