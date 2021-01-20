@@ -19,9 +19,9 @@ export default initAuth0({
     // (Optional) Store the id_token in the session. Defaults to false.
     storeIdToken: false,
     // (Optional) Store the access_token in the session. Defaults to false.
-    storeAccessToken: false,
+    storeAccessToken: true,
     // (Optional) Store the refresh_token in the session. Defaults to false.
-    storeRefreshToken: false,
+    storeRefreshToken: true,
   },
   oidcClient: {
     // (Optional) Configure the timeout in milliseconds for HTTP requests to Auth0.

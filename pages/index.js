@@ -23,6 +23,8 @@ export default function Home({ user }) {
 
 export async function getServerSideProps(context) {
   const session = await auth0.getSession(context.req);
+  console.log("session", session);
+
   const user = session?.user ?? null;
 
   return {
