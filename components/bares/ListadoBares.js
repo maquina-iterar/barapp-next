@@ -11,12 +11,11 @@ import NearByPosicion from "./NearByPosicion";
 import SearchIcon from "@material-ui/icons/Search";
 import CancelIcon from "@material-ui/icons/Cancel";
 import IconButton from "@material-ui/core/IconButton";
-import TextField from "@material-ui/core/TextField";
+import SearchInput from "./SearchInput";
 
 const ListadoBares = ({ user, near, by }) => {
   const [searchVisible, setSearchVisible] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const refSetTimeout = useRef(null);
 
   const [location, updateLocation] = useMyLocation();
 
@@ -57,52 +56,46 @@ const ListadoBares = ({ user, near, by }) => {
             display: "flex",
             gap: 20,
             marginTop: 20,
+            minHeight: 68,
           }}
         >
-          <div style={{ display: "flex", width: "70%", flex: 1 }}>
+          <div
+            style={{
+              display: "flex",
+              width: searchVisible ? "100%" : "70%",
+              flex: 1,
+            }}
+          >
             {!searchVisible && !isNearBy && (
               <MiPosicion value={location} onFindMe={updateLocation} />
             )}
             {!searchVisible && isNearBy && <NearByPosicion value={near} />}
             {searchVisible && (
-              <TextField
-                label="Buscar"
-                color="secondary"
-                fullWidth={true}
-                variant="outlined"
-                onChange={(event) => {
-                  const text = event.target.value;
-
-                  if (refSetTimeout.current)
-                    clearTimeout(refSetTimeout.current);
-
-                  refSetTimeout.current = setTimeout(
-                    () => setSearchText(text),
-                    500
-                  );
+              <SearchInput
+                onCancel={() => {
+                  setSearchVisible(false);
+                  setSearchText("");
                 }}
-                autoFocus
+                onSearchChange={(text) => {
+                  setSearchText(text);
+                }}
               />
             )}
           </div>
-          <div>
-            <IconButton
-              aria-label="search"
-              color="secondary"
-              onClick={() => {
-                const isVisible = !searchVisible;
-
-                setSearchVisible(isVisible);
-
-                if (!isVisible) {
-                  setSearchText("");
-                }
-              }}
-            >
-              {!searchVisible && <SearchIcon fontSize="large" />}
-              {searchVisible && <CancelIcon fontSize="large" />}
-            </IconButton>
-          </div>
+          {!searchVisible && (
+            <div>
+              <IconButton
+                aria-label="search"
+                color="secondary"
+                onClick={() => {
+                  setSearchVisible(true);
+                }}
+              >
+                {!searchVisible && <SearchIcon fontSize="large" />}
+                {searchVisible && <CancelIcon fontSize="large" />}
+              </IconButton>
+            </div>
+          )}
         </div>
         <InfiniteScroll
           dataLength={bares ? bares.length : 0} //This is important field to render the next data

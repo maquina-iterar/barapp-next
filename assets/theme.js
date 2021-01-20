@@ -36,7 +36,7 @@ const theme = createMuiTheme({
     MuiCssBaseline: {
       "@global": {
         html: {
-          background: `linear-gradient(163.8deg, ${secondary.gray700} 3.22%, ${secondary.gray900} 96.5%);`,
+          background: `linear-gradient(163.8deg, ${secondary.gray700} 3.22vh, ${secondary.gray900} 96.5vh);`,
         },
       },
     },
