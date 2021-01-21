@@ -2,10 +2,6 @@ module.exports = {
   images: {
     imageSizes: [320, 560], // widths
     deviceSizes: [640, 3840],
-    domains: [
-      "lh3.googleusercontent.com",
-      "drinx-api.herokuapp.com",
-      "s3.amazonaws.com",
-    ],
+    domains: ["d1frufo1uy8rax.cloudfront.net"],
   },
 };
