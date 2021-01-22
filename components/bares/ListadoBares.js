@@ -43,7 +43,7 @@ const ListadoBares = ({ user, near, by }) => {
   const isLoading = status === "loading" || bares.length === 0;
 
   return (
-    <Layout addLogo user={user}>
+    <Layout addLogo addQRScan user={user}>
       <div
         style={{
           display: "flex",

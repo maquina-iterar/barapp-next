@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     height: 32,
   }),
   user: {
-    paddingTop: 10,
+    paddingTop: 5,
   },
 }));
 
@@ -26,32 +26,24 @@ const LoginButton = ({ user }) => {
   return (
     <>
       {!user && (
-        <div className={classes.user}>
-          <Link href={"/api/login"} passHref>
-            <IconButton
-              color="inherit"
-              component={"a"}
-              className={classes.user}
-            >
-              <User />
-            </IconButton>
-          </Link>
-        </div>
+        <Link href={"/api/login"} passHref>
+          <IconButton color="inherit" component={"a"}>
+            <User />
+          </IconButton>
+        </Link>
       )}
       {user && (
-        <div className={classes.user}>
-          <Link href={"/account"} passHref>
-            <IconButton color="inherit" component={"a"}>
-              <Avatar
-                className={classes.avatar}
-                src={user.picture}
-                alt={user.nickname}
-              >
-                {user.name[0].toUpperCase()}
-              </Avatar>
-            </IconButton>
-          </Link>
-        </div>
+        <Link href={"/account"} passHref>
+          <IconButton color="inherit" component={"a"}>
+            <Avatar
+              className={classes.avatar}
+              src={user.picture}
+              alt={user.nickname}
+            >
+              {user.name[0].toUpperCase()}
+            </Avatar>
+          </IconButton>
+        </Link>
       )}
     </>
   );

@@ -9,6 +9,7 @@ import LoginButton from "./LoginButton";
 import Back from "../assets/icons/Back";
 import Logo from "assets/Logo";
 import Link from "next/link";
+import QRScanButton from "./QRScanButton";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,9 +35,9 @@ const useStyles = makeStyles((theme) => ({
   title: {
     paddingTop: 10,
     flexGrow: 1,
-    color: "#232326",
-    fontWeight: "bold",
-    fontSize: theme.typography.pxToRem(28),
+    //color: "#232326",
+    //fontWeight: "bold",
+    //fontSize: theme.typography.pxToRem(28),
   },
   container: {
     paddingLeft: 20,
@@ -46,13 +47,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Layout = ({ children, backUrl, title, addLogo, user }) => {
+const Layout = ({ children, backUrl, title, addLogo, addQRScan, user }) => {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
       <AppBar position="relative" elevation={0} className={classes.topbar}>
-        <Toolbar style={{ paddingRight: 5 }}>
+        <Toolbar style={{ paddingRight: 5, marginTop: 5 }}>
           {backUrl && (
             <Link href={backUrl} passHref>
               <IconButton edge="start" color="inherit" component={"a"}>
@@ -70,6 +71,7 @@ const Layout = ({ children, backUrl, title, addLogo, user }) => {
             )}
             {title && <Typography variant="h6">{title}</Typography>}
           </div>
+          {addQRScan && <QRScanButton />}
           <LoginButton user={user} />
         </Toolbar>
       </AppBar>
