@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
@@ -17,7 +17,6 @@ import MobileStepper from "@material-ui/core/MobileStepper";
 import ArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import ArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import Lightbox from "react-image-lightbox";
-import { withStyles } from "@material-ui/core/styles";
 import Location from "assets/icons/Location";
 import IconoCaracteristica from "assets/icons/IconoCaracteristica";
 import IconButton from "@material-ui/core/IconButton";
@@ -127,15 +126,6 @@ const DetalleBar = ({ slug, user, value }) => {
 
   const userId = user ? user.sub : "";
 
-  const { isLoading, data: bar = {}, error } = useQuery(
-    [queryBarDetails, slug, userId],
-    () => getBar(slug, userId),
-    {
-      enabled: !value && !!slug && !!(userId || userId === ""),
-      initialData: value,
-    }
-  );
-
   const queryClient = useQueryClient();
 
   const {
@@ -147,6 +137,16 @@ const DetalleBar = ({ slug, user, value }) => {
       queryClient.invalidateQueries(queryBarDetails);
     },
   });
+
+  const { isLoading, data: bar = {}, error } = useQuery(
+    [queryBarDetails, slug, userId],
+    () => getBar(slug, userId),
+    {
+      enabled: !!slug && !!(userId || userId === ""),
+      staleTime: 5000,
+      initialData: value,
+    }
+  );
 
   const {
     meGusta = 0,
