@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import {
   useLocationPermission,
   permissionOptions,
-} from "components/bares/useMyLocation";
+} from "components/hooks/useMyLocation";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";

@@ -5,7 +5,7 @@ import Layout from "../../components/Layout";
 import axios from "axios";
 import { useInfiniteQuery } from "react-query";
 import MiPosicion from "./MiPosicion";
-import useMyLocation from "./useMyLocation";
+import useMyLocation from "components/hooks/useMyLocation";
 import InfiniteScroll from "react-infinite-scroll-component";
 import NearByPosicion from "./NearByPosicion";
 import SearchIcon from "@material-ui/icons/Search";
