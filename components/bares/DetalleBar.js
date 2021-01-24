@@ -138,6 +138,16 @@ const DetalleBar = ({ slug, user, value }) => {
     },
   });
 
+  const {
+    mutateAsync: mutateDeleteValoracion,
+    status: valoracionDeleteStatus,
+    error: valoracionDeleteError,
+  } = useMutation(deleteValoracion, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(queryBarDetails);
+    },
+  });
+
   const { isLoading, data: bar = {}, error } = useQuery(
     [queryBarDetails, slug, userId],
     () => getBar(slug, userId),
@@ -186,6 +196,11 @@ const DetalleBar = ({ slug, user, value }) => {
   const descriptionLines = descripcion ? descripcion.split("\n") : [];
 
   const coverImage = galeria && galeria[activeStep];
+
+  const disabledValoracionButtons = [
+    valoracionStatus,
+    valoracionDeleteStatus,
+  ].includes("loading");
 
   return (
     <Layout backUrl="/" user={user}>
@@ -302,38 +317,50 @@ const DetalleBar = ({ slug, user, value }) => {
                 {nombre}
               </Typography>
               <div style={{ display: "flex", alignSelf: "flex-start" }}>
-                <ButtonWithAuthPopup
-                  color={miValoracion === "megusta" ? "primary" : "secondary"}
-                  disabled={
-                    miValoracion ||
-                    ["success", "loading"].includes(valoracionStatus)
-                  }
-                  onClick={() =>
-                    mutateValoracion({
-                      barId: _id,
-                      valoracion: "megusta",
-                    })
-                  }
-                  user={user}
-                >
-                  <LikeIcon />
-                </ButtonWithAuthPopup>
-                <ButtonWithAuthPopup
-                  disabled={
-                    miValoracion ||
-                    ["success", "loading"].includes(valoracionStatus)
-                  }
-                  onClick={() =>
-                    mutateValoracion({
-                      barId: _id,
-                      valoracion: "nomegusta",
-                    })
-                  }
-                  color={miValoracion === "nomegusta" ? "primary" : "secondary"}
-                  user={user}
-                >
-                  <DislikeIcon />
-                </ButtonWithAuthPopup>
+                {(!miValoracion || miValoracion === "megusta") && (
+                  <ButtonWithAuthPopup
+                    color={miValoracion === "megusta" ? "primary" : "secondary"}
+                    disabled={disabledValoracionButtons}
+                    onClick={() => {
+                      if (!miValoracion) {
+                        mutateValoracion({
+                          barId: _id,
+                          valoracion: "megusta",
+                        });
+                      } else {
+                        mutateDeleteValoracion({
+                          barId: _id,
+                        });
+                      }
+                    }}
+                    user={user}
+                  >
+                    <LikeIcon />
+                  </ButtonWithAuthPopup>
+                )}
+                {(!miValoracion || miValoracion === "nomegusta") && (
+                  <ButtonWithAuthPopup
+                    disabled={disabledValoracionButtons}
+                    onClick={() => {
+                      if (!miValoracion) {
+                        mutateValoracion({
+                          barId: _id,
+                          valoracion: "nomegusta",
+                        });
+                      } else {
+                        mutateDeleteValoracion({
+                          barId: _id,
+                        });
+                      }
+                    }}
+                    color={
+                      miValoracion === "nomegusta" ? "primary" : "secondary"
+                    }
+                    user={user}
+                  >
+                    <DislikeIcon />
+                  </ButtonWithAuthPopup>
+                )}
               </div>
             </div>
           </div>
@@ -530,8 +557,6 @@ const formatRedSocial = ({ redSocial, link }) => {
 };
 
 const getBar = async (slug, userId) => {
-  console.log("getBar");
-
   const apiUrl = `${window.location.origin}/api/bares/getOneBySlug?slug=${slug}&userId=${userId}`;
 
   const { data } = await axios.get(apiUrl);
@@ -543,4 +568,10 @@ const postValoracion = async ({ barId, valoracion }) => {
   const apiUrl = `${window.location.origin}/api/bares/postValoracion`;
 
   return await axios.post(apiUrl, { barId, valoracion });
+};
+
+const deleteValoracion = async ({ barId }) => {
+  const apiUrl = `${window.location.origin}/api/bares/deleteValoracion`;
+
+  return await axios.post(apiUrl, { barId });
 };

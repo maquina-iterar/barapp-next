@@ -36,6 +36,7 @@ export const getBarBySlug = async (slug, userId) => {
     const valoracion = await valoraciones.findOne({
       barId,
       userId,
+      deletedAt: null,
     });
 
     miValoracion = valoracion ? valoracion.valor : null;

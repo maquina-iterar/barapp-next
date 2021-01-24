@@ -24,7 +24,10 @@ const postValoracion = auth0.requireAuthentication(async (req, res) => {
 
     const incrementar = isLike ? { meGusta: 1 } : { noMeGusta: 1 };
 
-    valoraciones.createIndex({ barId: 1, userId: 1 }, { unique: true });
+    valoraciones.createIndex(
+      { barId: 1, userId: 1, deletedAt: 1 },
+      { unique: true }
+    );
 
     await valoraciones.insert({
       barId: barId,
