@@ -15,6 +15,7 @@ const postValoracion = auth0.requireAuthentication(async (req, res) => {
         error: "post_valoracion_invalid",
         params: { barId, valoracion },
       });
+      return;
     }
 
     const isLike = valoracion.toLowerCase() === "megusta";

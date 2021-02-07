@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -26,6 +26,7 @@ import Website from "assets/icons/Website";
 import EmptyImage from "assets/ilustraciones/EmptyImage";
 import Image from "next/image";
 import Link from "next/link";
+import Tooltip from "@material-ui/core/Tooltip";
 
 import "react-image-lightbox/style.css";
 
@@ -121,8 +122,15 @@ const caracteristicasLabels = {
 const STARS_NUMBER = 5;
 const queryBarDetails = "bar";
 
+const DELETE_VALORACION_MINIMUN_DATE_REQUIRED =
+  "delete_valoracion_minimun_date_required";
+
 const DetalleBar = ({ slug, user, value }) => {
   const classes = useStyles();
+
+  const [isValoracionMinimunError, setIsValoracionMinimunError] = useState(
+    false
+  );
 
   const userId = user ? user.sub : "";
 
@@ -145,6 +153,15 @@ const DetalleBar = ({ slug, user, value }) => {
   } = useMutation(deleteValoracion, {
     onSuccess: () => {
       queryClient.invalidateQueries(queryBarDetails);
+    },
+    onError: (error) => {
+      const errorCode = error?.response?.data?.error;
+
+      if (errorCode === DELETE_VALORACION_MINIMUN_DATE_REQUIRED) {
+        console.log("hayError", error);
+        setIsValoracionMinimunError(true);
+        return;
+      }
     },
   });
 
@@ -201,6 +218,14 @@ const DetalleBar = ({ slug, user, value }) => {
     valoracionStatus,
     valoracionDeleteStatus,
   ].includes("loading");
+
+  useEffect(() => {
+    if (isValoracionMinimunError) {
+      setTimeout(() => {
+        setIsValoracionMinimunError(false);
+      }, 3000);
+    }
+  }, [isValoracionMinimunError]);
 
   return (
     <Layout backUrl="/" user={user}>
@@ -316,52 +341,60 @@ const DetalleBar = ({ slug, user, value }) => {
               >
                 {nombre}
               </Typography>
-              <div style={{ display: "flex", alignSelf: "flex-start" }}>
-                {(!miValoracion || miValoracion === "megusta") && (
-                  <ButtonWithAuthPopup
-                    color={miValoracion === "megusta" ? "primary" : "secondary"}
-                    disabled={disabledValoracionButtons}
-                    onClick={() => {
-                      if (!miValoracion) {
-                        mutateValoracion({
-                          barId: _id,
-                          valoracion: "megusta",
-                        });
-                      } else {
-                        mutateDeleteValoracion({
-                          barId: _id,
-                        });
+              <LightTooltip
+                open={isValoracionMinimunError}
+                title={"Hoy ya votaste! Solo se puede votar una vez al día."}
+                placement="top"
+              >
+                <div style={{ display: "flex", alignSelf: "flex-start" }}>
+                  {(!miValoracion || miValoracion === "megusta") && (
+                    <ButtonWithAuthPopup
+                      color={
+                        miValoracion === "megusta" ? "primary" : "secondary"
                       }
-                    }}
-                    user={user}
-                  >
-                    <LikeIcon />
-                  </ButtonWithAuthPopup>
-                )}
-                {(!miValoracion || miValoracion === "nomegusta") && (
-                  <ButtonWithAuthPopup
-                    disabled={disabledValoracionButtons}
-                    onClick={() => {
-                      if (!miValoracion) {
-                        mutateValoracion({
-                          barId: _id,
-                          valoracion: "nomegusta",
-                        });
-                      } else {
-                        mutateDeleteValoracion({
-                          barId: _id,
-                        });
+                      disabled={disabledValoracionButtons}
+                      onClick={() => {
+                        if (!miValoracion) {
+                          mutateValoracion({
+                            barId: _id,
+                            valoracion: "megusta",
+                          });
+                        } else {
+                          mutateDeleteValoracion({
+                            barId: _id,
+                          });
+                        }
+                      }}
+                      user={user}
+                    >
+                      <LikeIcon />
+                    </ButtonWithAuthPopup>
+                  )}
+                  {(!miValoracion || miValoracion === "nomegusta") && (
+                    <ButtonWithAuthPopup
+                      disabled={disabledValoracionButtons}
+                      onClick={() => {
+                        if (!miValoracion) {
+                          mutateValoracion({
+                            barId: _id,
+                            valoracion: "nomegusta",
+                          });
+                        } else {
+                          mutateDeleteValoracion({
+                            barId: _id,
+                          });
+                        }
+                      }}
+                      color={
+                        miValoracion === "nomegusta" ? "primary" : "secondary"
                       }
-                    }}
-                    color={
-                      miValoracion === "nomegusta" ? "primary" : "secondary"
-                    }
-                    user={user}
-                  >
-                    <DislikeIcon />
-                  </ButtonWithAuthPopup>
-                )}
-              </div>
+                      user={user}
+                    >
+                      <DislikeIcon />
+                    </ButtonWithAuthPopup>
+                  )}
+                </div>
+              </LightTooltip>
             </div>
           </div>
           <div
@@ -535,6 +568,15 @@ const DetalleBar = ({ slug, user, value }) => {
 };
 
 export default DetalleBar;
+
+const LightTooltip = withStyles((theme) => ({
+  tooltip: {
+    backgroundColor: theme.palette.common.white,
+    color: "rgba(0, 0, 0, 0.87)",
+    boxShadow: theme.shadows[1],
+    fontSize: 16,
+  },
+}))(Tooltip);
 
 const StyledRating = withStyles({
   iconFilled: {

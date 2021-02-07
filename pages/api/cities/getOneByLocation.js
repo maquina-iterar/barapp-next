@@ -9,6 +9,7 @@ const getOneByLocation = async (req, res) => {
     if (!latitude || !longitude) {
       console.error(error);
       res.status(409).json({ error: "get_city_by_location_missing_location" });
+      return;
     }
 
     const [myCity] = nearbyCities(

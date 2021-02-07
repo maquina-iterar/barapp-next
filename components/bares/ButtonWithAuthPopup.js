@@ -11,14 +11,21 @@ import { useTheme } from "@material-ui/core/styles";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-const ButtonWithAuthPopup = ({ user, color, disabled, onClick, children }) => {
+const ButtonWithAuthPopup = ({
+  user,
+  color,
+  disabled,
+  onClick,
+  children,
+  ref,
+}) => {
   const [open, setOpen] = useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const router = useRouter();
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (event) => {
     if (!user) {
       setOpen(true);
     }
@@ -32,7 +39,7 @@ const ButtonWithAuthPopup = ({ user, color, disabled, onClick, children }) => {
   };
 
   return (
-    <div>
+    <div ref={ref}>
       <IconButton
         color={color}
         disableRipple={disabled}
