@@ -2,10 +2,8 @@ import React, { useState, useEffect } from "react";
 import Typography from "@material-ui/core/Typography";
 import LocationIcon from "@material-ui/icons/GpsFixed";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  useLocationPermission,
-  permissionOptions,
-} from "components/hooks/useMyLocation";
+import { useLocationPermission } from "components/hooks/useMyLocation";
+import permissionOptions from "components/hooks/permissionOptions";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";

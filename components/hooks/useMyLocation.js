@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import store from "store2";
 import axios from "axios";
+import permissionOptions from "./permissionOptions";
 
 const useMyLocation = () => {
   const [location, setLocation] = useState(store("latestLocation") ?? []);
@@ -33,13 +34,6 @@ const useMyLocation = () => {
 };
 
 export default useMyLocation;
-
-export const permissionOptions = {
-  loading: "loading",
-  granted: "granted",
-  prompt: "prompt",
-  denied: "denied",
-};
 
 export const useLocationPermission = (currentLocation) => {
   const [state, setState] = useState(permissionOptions.loading);

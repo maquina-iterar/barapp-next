@@ -1,47 +1,30 @@
 import { useState, useEffect } from "react";
-import store from "store2";
-import axios from "axios";
+import permissionOptions from "./permissionOptions";
 
-const useMyLocation = () => {
-  const [location, setLocation] = useState(store("latestLocation") ?? []);
+export const requestCameraPermission = async () => {
+  try {
+    if (navigator.mediaDevices) {
+      const result = await navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: { facingMode: "user" },
+      });
 
-  const updateLocation = async () => {
-    const current = await getCurrentLocation();
+      const cameraId = result.id;
 
-    setLocation(current);
-    store("latestLocation", current);
-  };
+      result.getTracks().forEach((track) => {
+        track.stop();
+      });
 
-  useEffect(() => {
-    const action = async () => {
-      try {
-        if (location && location.length !== 2) {
-          const { data } = await axios.get("https://freegeoip.app/json/");
+      return cameraId;
+    }
+  } catch (error) {
+    console.error("requestCameraPermission", error);
+  }
 
-          setLocation([data.latitude, data.longitude]);
-          store("latestLocation", [data.latitude, data.longitude]);
-        }
-      } catch (error) {
-        console.error("useMyLocation freegeoip", error);
-      }
-    };
-
-    action();
-  }, [location, setLocation]);
-
-  return [location, updateLocation];
+  return "fail";
 };
 
-export default useMyLocation;
-
-export const permissionOptions = {
-  loading: "loading",
-  granted: "granted",
-  prompt: "prompt",
-  denied: "denied",
-};
-
-export const useLocationPermission = (currentLocation) => {
+export const useCameraPermission = (camera) => {
   const [state, setState] = useState(permissionOptions.loading);
 
   useEffect(() => {
@@ -51,7 +34,7 @@ export const useLocationPermission = (currentLocation) => {
 
         if (navigator.permissions) {
           const { state: newState } = await navigator.permissions.query({
-            name: "geolocation",
+            name: "camera",
           });
 
           setState(newState);
@@ -60,31 +43,7 @@ export const useLocationPermission = (currentLocation) => {
     };
 
     refreshPermission();
-  }, [setState, currentLocation]);
+  }, [setState, camera]);
 
   return state;
-};
-
-const getCurrentLocation = () => {
-  return new Promise((resolve, reject) => {
-    if (navigator.geolocation) {
-      const options = {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 0,
-      };
-
-      const success = ({ coords }) => {
-        resolve([coords.latitude, coords.longitude]);
-      };
-
-      const error = (err) => {
-        reject(err);
-      };
-
-      navigator.geolocation.getCurrentPosition(success, error, options);
-    } else {
-      reject(new Error("geolocation no available"));
-    }
-  });
 };

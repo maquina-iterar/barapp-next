@@ -1,8 +1,6 @@
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import auth0 from "../libs/initAuth0";
-import Router from "next/router";
-import { useEffect } from "react";
 
 const QRScanner = dynamic(import("components/scanner/QRScanner"));
 
